@@ -1,258 +1,243 @@
-RAG Document Q&A — Multi-PDF Traditional RAG + GraphRAG-Inspired Search
+RAG Document Q&A System
 
-A Streamlit application that answers questions over multiple PDF documents using four retrieval modes: Traditional RAG, Local Search, Global Search, and Hybrid Search.
+Multi-PDF Retrieval-Augmented Generation with GraphRAG-Inspired Search
 
-«Project Overview: This project combines vector-based retrieval with knowledge graph-based retrieval to provide contextual and evidence-backed answers from uploaded documents.
+An AI-powered document question-answering application that enables users to upload multiple PDF documents and retrieve accurate, context-aware answers using vector-based retrieval and knowledge graph-based search.
 
-Search Modes: Traditional RAG uses semantic vector retrieval, Local Search focuses on relevant entities and relationships, Global Search uses community-level information, and Hybrid Search combines retrieval approaches.
-
-LLM Integration: Google Gemini is used for language generation and supported extraction tasks.
-
-Caching: Persistent LLM response caching is implemented using SQLite to reuse previously generated responses.
-
-Deployment: The application is containerized using Docker and Docker Compose.»
+The system integrates LangChain, ChromaDB, Sentence Transformers, Google Gemini API, and NetworkX to support multiple retrieval strategies and evidence-backed responses.
 
 ---
 
-1. Objective
+1. Key Features
 
-Develop an intelligent document question-answering system that allows users to upload PDF documents, process their contents, and ask natural-language questions.
+- Multi-PDF Support: Upload and process multiple PDF documents.
+- Traditional RAG: Retrieve relevant document chunks using semantic vector search.
+- Local Search: Retrieve focused information using knowledge graph entities and relationships.
+- Global Search: Retrieve broader contextual information using graph communities and reports.
+- Hybrid Search: Combine retrieval approaches for comprehensive results.
+- Knowledge Graph: Represent relationships between extracted entities.
+- Evidence-Based Responses: Generate answers grounded in retrieved document information.
+- Source Citations: Provide references to supporting document evidence.
+- Persistent LLM Caching: Store and reuse previous responses using SQLite.
+- Interactive Interface: User-friendly Streamlit application.
+- Docker Support: Run the application in a containerized environment.
 
-The system supports four retrieval approaches to provide both focused and broader contextual answers.
+2. Retrieval Modes
 
-The primary objectives are:
+The application provides four retrieval modes:
 
-- Extract and process information from PDF documents.
-- Generate semantic embeddings using Sentence Transformers.
-- Store and retrieve document embeddings using ChromaDB.
-- Construct a knowledge graph using extracted entities and relationships.
-- Organize related entities into communities.
-- Support Traditional RAG, Local Search, Global Search, and Hybrid Search.
-- Generate evidence-backed responses with citations.
-- Reduce repeated LLM API calls through persistent caching.
+2.1 Traditional RAG
 
-2. Architecture
+- Uses semantic similarity search.
+- Retrieves relevant chunks from ChromaDB.
+- Passes retrieved context to Google Gemini.
+- Generates context-aware answers.
 
-The application follows a modular architecture consisting of document ingestion, embedding generation, vector storage, knowledge graph construction, retrieval, and response generation.
+2.2 Local Search
 
-2.1 Document Ingestion
+- Uses knowledge graph-based retrieval.
+- Focuses on relevant entities and their relationships.
+- Retrieves specific information connected to the user's query.
 
-- Upload PDF documents through the Streamlit interface.
-- Extract text using PyPDF.
-- Split extracted content into manageable text chunks.
-- Prepare document chunks and metadata for indexing.
+2.3 Global Search
 
-2.2 Vector Processing
+- Uses graph communities and community reports.
+- Retrieves broader information across the document collection.
+- Supports questions requiring an overall understanding of multiple topics.
 
-- Generate embeddings using Sentence Transformers.
-- Store vector representations in ChromaDB.
-- Retrieve semantically relevant document chunks based on user queries.
+2.4 Hybrid Search
 
-2.3 Knowledge Graph Construction
+- Combines vector-based and graph-based retrieval.
+- Integrates complementary contextual information.
+- Generates comprehensive, evidence-supported answers.
 
-- Extract entities and relationships from document content.
-- Represent entities and their relationships as a graph.
-- Use NetworkX for graph representation and processing.
-- Apply community detection to organize related entities.
-- Generate community reports for broader information retrieval.
+3. System Architecture
 
-2.4 Query Processing
+The application follows a modular architecture with the following components:
 
-User queries are processed through the selected retrieval mode.
+1. Document Ingestion
+   
+   - PDF text extraction using PyPDF.
+   - Text preprocessing and chunking.
+   - Document metadata preparation.
 
-The retrieved information is passed to the language model for contextual answer generation.
+2. Embedding Generation
+   
+   - Sentence Transformers for semantic embeddings.
+   - Conversion of document chunks into vector representations.
 
-2.5 Response Generation
+3. Vector Storage
+   
+   - ChromaDB for persistent vector storage.
+   - Semantic similarity-based document retrieval.
 
-- Integrate Google Gemini API for response generation.
-- Use retrieved document context and graph information.
-- Provide evidence-backed answers and citations.
+4. Knowledge Graph Construction
+   
+   - Entity and relationship extraction.
+   - Graph representation using NetworkX.
+   - Community detection and report generation.
 
-3. Retrieval Modes
+5. Query Processing
+   
+   - User query handling.
+   - Retrieval through the selected search mode.
+   - Context preparation for response generation.
 
-The application provides four retrieval modes.
-
-3.1 Traditional RAG
-
-Uses vector similarity search to retrieve relevant document chunks from ChromaDB.
-
-The retrieved context is passed to Gemini to generate answers relevant to the user's question.
-
-3.2 Local Search
-
-Uses knowledge graph entities and their relationships to retrieve focused information relevant to a specific query.
-
-It helps identify connections between related entities within the document collection.
-
-3.3 Global Search
-
-Uses knowledge graph communities and generated community reports to retrieve broader information across the document collection.
-
-It is designed for questions that require understanding information from multiple related topics.
-
-3.4 Hybrid Search
-
-Combines multiple retrieval approaches to obtain complementary contextual information.
-
-The retrieved evidence is used to generate a comprehensive response.
+6. Answer Generation
+   
+   - Google Gemini API integration.
+   - Context-aware response generation.
+   - Evidence and citation handling.
 
 4. Persistent LLM Caching
 
-The application implements persistent LLM response caching using SQLite.
+The system implements SQLite-based persistent caching to reduce repeated LLM requests.
 
-The caching mechanism stores previously generated responses and reuses them when matching requests are made.
+Key capabilities:
 
-Key features:
-
-- SQLite-based persistent cache storage.
-- Namespace-based cache organization.
-- Cache key-based response retrieval.
-- Cache HIT and MISS tracking.
-- Reuse of previously generated responses.
-- Reduced repeated Gemini API calls.
-
-Cache HIT: A matching cached response is available and reused.
-
-Cache MISS: No matching response is available, so a new LLM request is performed and the response can be stored.
-
-This mechanism helps reduce redundant API calls and improve application efficiency.
+- Stores previously generated LLM responses.
+- Uses namespace-based cache organization.
+- Retrieves matching responses using cache keys.
+- Tracks cache HIT and MISS events.
+- Reuses cached responses for matching requests.
+- Helps reduce redundant API calls.
 
 5. Technology Stack
 
-Programming Language: Python 3.11
-
-Frontend: Streamlit
-
-LLM: Google Gemini API
-
-LLM Framework: LangChain
-
-Embedding Model: Sentence Transformers
-
-Vector Database: ChromaDB
-
-Knowledge Graph: NetworkX
-
-Graph Processing: Graspologic
-
-Community Detection: Leiden Algorithm
-
-PDF Processing: PyPDF
-
-Caching: SQLite
-
-Containerization: Docker and Docker Compose
+Category| Technologies
+Programming Language| Python 3.11
+Frontend| Streamlit
+LLM| Google Gemini API
+LLM Framework| LangChain
+Embeddings| Sentence Transformers
+Vector Database| ChromaDB
+Knowledge Graph| NetworkX
+Graph Processing| Graspologic
+PDF Processing| PyPDF
+Data Validation| Pydantic
+Caching| SQLite
+Containerization| Docker, Docker Compose
 
 6. Project Structure
 
 Rag-Document-QA/
 │
-├── app.py
-├── ingestion.py
-├── vector_store.py
-├── graph_rag.py
-├── search.py
-├── evidence.py
-├── llm_cache.py
+├── app.py                 # Streamlit application
+├── ingestion.py           # PDF ingestion and processing
+├── vector_store.py        # Vector database operations
+├── graph_rag.py           # Knowledge graph retrieval
+├── search.py              # Retrieval and search logic
+├── evidence.py             # Evidence and citation handling
+├── llm_cache.py           # Persistent LLM caching
 │
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .dockerignore
-├── .gitignore
-├── README.md
-│
-└── .env.example
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Docker image configuration
+├── docker-compose.yml     # Container orchestration
+├── .dockerignore          # Docker build exclusions
+├── .gitignore             # Git exclusions
+├── .env.example           # Environment variable template
+└── README.md              # Project documentation
 
-«Runtime-generated files such as local databases, uploaded PDFs, vector-store data, and cache files are excluded from version control.»
+7. Installation and Setup
 
-7. Installation and Execution
-
-7.1 Prerequisites
+Prerequisites
 
 - Python 3.11
 - Git
 - Google Gemini API key
-- Docker Desktop (optional, for containerized execution)
+- Docker Desktop (optional)
 
-7.2 Clone the Repository
+Step 1: Clone the Repository
 
 git clone https://github.com/r-sanjana/Rag-Document-QA.git
 cd Rag-Document-QA
 
-7.3 Create a Virtual Environment
+Step 2: Create a Virtual Environment
 
 python -m venv .venv
 
-Activate the environment on Windows:
+Activate on Windows:
 
 .venv\Scripts\activate
 
-7.4 Install Dependencies
+Step 3: Install Dependencies
 
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-7.5 Configure Environment Variables
+Step 4: Configure API Key
 
 Create a ".env" file in the project root directory.
 
-Add the following:
-
 GEMINI_API_KEY=your_gemini_api_key
 
-«Replace the placeholder with your actual Gemini API key. Ensure the variable name matches the application's configuration. Never commit your ".env" file to GitHub.»
+Replace the placeholder with your actual API key.
 
-7.6 Run the Application
+«Security Note: Never upload API keys or ".env" files to GitHub.»
+
+Step 5: Run the Application
 
 streamlit run app.py
 
-Open the application:
+Open the application in your browser:
 
 http://localhost:8501
 
 8. Docker Deployment
 
-The project includes Docker support for containerized execution.
+The application supports containerized execution using Docker and Docker Compose.
 
-8.1 Build the Docker Image
+Build the Docker image:
 
 docker compose build
 
-8.2 Start the Application
+Start the application:
 
 docker compose up -d
 
-8.3 Access the Application
-
-http://localhost:8501
-
-8.4 Check Running Containers
+Check running containers:
 
 docker ps
 
-8.5 View Application Logs
+View application logs:
 
 docker compose logs -f
 
-8.6 Stop the Container
+Stop the application:
 
 docker compose down
 
-«Docker Compose uses a named volume for ChromaDB persistence. SQLite cache persistence across container recreation requires a separate persistent volume configuration.»
+Access the application at:
 
-9. Environment and Security
+http://localhost:8501
 
-- API keys are maintained through environment variables.
-- ".env" files are excluded from Git.
-- Local databases and generated cache files are excluded from version control.
-- Uploaded PDF documents are excluded from the repository.
-- Deployment platforms should use their secure secrets or environment-variable configuration.
+9. Security and Data Management
+
+- API credentials are configured through environment variables.
+- Sensitive configuration files are excluded from version control.
+- Local databases and generated cache files are excluded from Git.
+- Uploaded PDF documents are not included in the repository.
+- Docker volumes are used for persistent ChromaDB storage.
 
 10. Future Enhancements
 
 - Support for additional document formats.
-- Improved retrieval and ranking mechanisms.
-- Advanced caching and performance optimization.
-- Enhanced document management.
-- Improved deployment and persistent storage capabilities.
+- Improved retrieval accuracy and ranking.
+- Advanced document management capabilities.
+- Enhanced caching and performance optimization.
+- Cloud deployment with persistent storage.
+- Improved scalability for larger document collections.
+
+11. Repository
+
+GitHub: "RAG Document Q&A" (https://github.com/r-sanjana/Rag-Document-QA)
+
+12. Author
+
+Sanjana R
+
+GitHub: "r-sanjana" (https://github.com/r-sanjana)
+
+---
+
+An AI-powered document intelligence system combining Retrieval-Augmented Generation, knowledge graph-based search, and persistent LLM caching.
