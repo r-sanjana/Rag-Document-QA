@@ -27,7 +27,6 @@ The system integrates **LangChain, ChromaDB, Sentence Transformers, Google Gemin
 8. [Docker Deployment](#-docker-deployment)
 9. [Security and Data Management](#-security-and-data-management)
 10. [Future Enhancements](#-future-enhancements)
-11. [Author](#-author)
 
 ---
 
