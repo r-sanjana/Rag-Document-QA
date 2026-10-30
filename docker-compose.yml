@@ -1,0 +1,14 @@
+services:
+  rag-app:
+    build: .
+    container_name: rag-document-qa
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - chroma_data:/app/.chroma_store
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
